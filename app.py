@@ -74,7 +74,10 @@ layout = dict(title="Bar Chart",
 fig = dict(data=data, layout=layout)
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+server = app.server
 
 app.layout = html.Div([
     html.Div(html.H1(children="Microbiology test result from 2018.01 to 2019.11")),
