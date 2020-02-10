@@ -26,6 +26,36 @@ zone_date3 = pd.to_datetime(db_zone3['SAMPLED_DATE']).dt.strftime("%Y-%m")
 db_zone4 = dataframe[dataframe['Areas'] == 'Zone 4']
 zone_date4 = pd.to_datetime(db_zone4['SAMPLED_DATE']).dt.strftime("%Y-%m")
 
+dates = {"2018-01":0,
+         "2018-02":2,
+         "2018-03":4,
+         "2018-04":6,
+         "2018-05":8,
+         "2018-06":10,
+         "2018-07":12,
+         "2018-08":14,
+         "2018-09":16,
+         "2018-10":18,
+         "2018-11":20,
+         "2018-12":22,
+         "2019-01":24,
+         "2019-02":26,
+         "2019-03":28,
+         "2019-04":30,
+         "2019-05":32,
+         "2019-06":34,
+         "2019-07":36,
+         "2019-08":38,
+         "2019-09":40,
+         "2019-10":42,
+         "2019-11":44,
+         "2019-12":46
+
+
+}
+
+dataframe['Number'] = dataframe['SAMPLED_DATE'].map(dates)
+
 """individual zones"""
 
 
@@ -121,37 +151,7 @@ layout3 = dict(title="Zone 3 data",
 layout4 = dict(title="Zone 4 data",
               showlegend=True)
 
-# trace_map = go.Scattermapbox(
-#     lat=dataframe['lat'],
-#     lon=dataframe['lon'],
-#     mode='markers',
-#     marker=go.scattermapbox.Marker(
-#         size=dataframe['Detected'],
-#         color=dataframe['Not Detected'],
-#         opacity=0.7
-#     ),
-#     text=dataframe['SAMPLE_NAME'],
-#     hoverinfo='text',
-#
-# )
 
-# layout_map = dict(
-#     title='map',
-#     autosize=True,
-#     hovermode='closest',
-#     showlegend=True,
-#     mapbox=go.layout.Mapbox(
-#         accesstoken=mapbox_token,
-#         bearing=0,
-#         center=go.layout.mapbox.Center(
-#             lat=-41.57623,
-#             lon=173.27493,
-#         ),
-#         zoom=12,
-#         style='open-street-map'
-#     ),
-# )
-# px.set_mapbox_access_token(open(mapbox_token).read())
 
 trace_map = px.scatter_mapbox(dataframe, lat='lat', lon='lon', color="Detected",
                               size='Not Detected', color_continuous_scale=px.colors.cyclical.IceFire, size_max=15, zoom=12)
@@ -170,23 +170,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 server = app.server
 
-# app.layout = html.Div([
-#     html.Div(html.H2(children="Microbiology test result from 2018.01 to 2019.11")),
-#
-#     html.Div(children='''Bar chart'''),
-#     dcc.Graph(
-#         id='Data by zones',
-#         figure=fig
-#     ),
-#
-#     html.Div(children='''Bar chart2'''),
-#     dcc.Graph(
-#         id='Data by zones2',
-#         figure=fig
-#     ),
-#
-#
-# ])
+
 
 app.layout = html.Div(
     html.Div([
@@ -202,7 +186,7 @@ app.layout = html.Div(
                          "margin-top": 10
                      }),
 
-            html.Div(children='''Dash: A web to show result''', className='nine columns')
+            html.Div(children='''Dashboard: A web application to show result''', className='nine columns')
         ], className='row'),
 
         html.Div([
@@ -241,26 +225,95 @@ app.layout = html.Div(
             html.Div([
                 dcc.Graph(id='map-slider'),
                 dcc.Slider(
-                    id='date-slider',
-                    min=dataframe['Num'].min(),
-                    max=dataframe['Num'].max(),
-                    value=dataframe['Num'].min(),
-                    marks={str(year): str(year) for year in dataframe['Num'].unique()},
-                    step=0.5,
+                    id='year-slider',
+                    min=0,
+                    max=46,
+                    value=2,
+                    marks={
+                        0: "2018-01",
+                        2: "2018-02",
+                        4: "2018-03",
+                        6: "2018-04",
+                        8: "2018-05",
+                        10: "2018-06",
+                        12: "2018-07",
+                        14: "2018-08",
+                        16: "2018-09",
+                        18: "2018-10",
+                        20: "2018-11",
+                        22: "2018-12",
+                        24: "2019-01",
+                        26: "2019-02",
+                        28: "2019-03",
+                        30: "2019-04",
+                        32: "2019-05",
+                        34: "2019-06",
+                        36: "2019-07",
+                        38: "2019-08",
+                        40: "2019-09",
+                        42: "2019-10",
+                        44: "2019-11",
+                        46: "2019-12"
+                    },
+                    step=None
 
                 )
             ], className='ten columns'),
+        ]),
+
+        html.Div([
+            html.Div([
+                dcc.Graph(
+                    id='pie-chart',
+                ),
+                html.Div([
+                    dcc.Slider(
+                        id='pie-slider',
+                        min=0,
+                        max=46,
+                        value=8,
+                        marks={
+                            0: "2018-01",
+                            2: "2018-02",
+                            4: "2018-03",
+                            6: "2018-04",
+                            8: "2018-05",
+                            10: "2018-06",
+                            12: "2018-07",
+                            14: "2018-08",
+                            16: "2018-09",
+                            18: "2018-10",
+                            20: "2018-11",
+                            22: "2018-12",
+                            24: "2019-01",
+                            26: "2019-02",
+                            28: "2019-03",
+                            30: "2019-04",
+                            32: "2019-05",
+                            34: "2019-06",
+                            36: "2019-07",
+                            38: "2019-08",
+                            40: "2019-09",
+                            42: "2019-10",
+                            44: "2019-11",
+                            46: "2019-12"
+                        },
+                    )
+                ], style={'textAlign': "center", "margin": "30px", "padding": "10px", "width": "65%",
+                               "margin-left": "auto",
+                               "margin-right": "auto"})
+            ], className="ten columns")
         ])
     ])
 )
 
 @app.callback(
     Output('map-slider', 'figure'),
-    [Input('date-slider', 'value')]
+    [Input('year-slider', 'value')]
 )
 
 def update_figure(selected_year):
-    filtered_df = dataframe[dataframe['Num'] == selected_year]
+    filtered_df = dataframe[dataframe['Number'] == selected_year]
     traces = []
     for i in filtered_df['SAMPLE_NAME'].unique():
         df_by_zone = filtered_df[filtered_df['SAMPLE_NAME'] == i]
@@ -268,8 +321,8 @@ def update_figure(selected_year):
             lat=df_by_zone['lat'],
             lon=df_by_zone['lon'],
             mode='markers',
-            marker={"size": df_by_zone['Detected']+10,
-                    "color": df_by_zone['Not Detected']},
+            marker={"size": df_by_zone['Detected']+20,
+                    "color": df_by_zone['Not Detected']*10},
             showlegend=True,
             text=df_by_zone['Detected'],
             name=i,
@@ -282,7 +335,7 @@ def update_figure(selected_year):
         showlegend=True,
         autosize=True,
         hovermode='closest',
-        title=dict(text="Result show on the map", font=dict(size=30, color='blue')),
+        title=dict(text="Result show on the map", font=dict(size=25, color='Black')),
         # margin={'l': 50, 'b': 40, 't': 10, 'r': 10},
         mapbox=go.layout.Mapbox(
             accesstoken=mapbox_token,
@@ -302,7 +355,17 @@ def update_figure(selected_year):
         'layout': layout_map
     }
 
-
+@app.callback(
+    Output("pie-chart", 'figure'),
+    [Input('pie-slider', 'value')]
+)
+def update_pie(selected):
+    return {
+        "data": [go.Pie(labels=dataframe['SAMPLE_NAME'].unique().tolist(), values=dataframe[dataframe['Number'] == selected]['Detected'].tolist(),
+                        marker={'colors': [dataframe['Detected']+50]}, textinfo='label')],
+        "layout": go.Layout(title=f"Pie Chart Result by Different Zones 2018.01-2019.12", margin={"l": 200, "r": 200, "t": 100},
+                            legend={"x": 1, "y": 0.7})
+    }
 
 
 
